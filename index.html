@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0f766e" />
+  <title>Toni's Cleaning Services — Invoicing</title>
+  <meta name="description" content="Create, save, and email professional invoices for Toni's Cleaning Services." />
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg" />
+  <link rel="stylesheet" href="styles.css" />
+  <!-- jsPDF for client-side PDF generation (vendored locally for offline reliability) -->
+  <script src="vendor/jspdf.umd.min.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <img src="assets/logo.svg" alt="Toni's Cleaning Services logo" class="brand-logo" />
+      <div class="brand-text">
+        <h1>Toni's Cleaning Services</h1>
+        <p>Invoicing &amp; Scheduling</p>
+      </div>
+    </div>
+    <div class="brand-contact">
+      <span>1101 E 267th St, Cleveland, MO 64734</span>
+      <span>(816) 406-8630</span>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab is-active" id="tab-invoice" role="tab" aria-selected="true" data-view="invoice">🧾 Invoice</button>
+    <button class="tab" id="tab-schedule" role="tab" aria-selected="false" data-view="schedule">📅 Weekly Schedule</button>
+  </nav>
+
+  <main class="layout" id="view-invoice">
+    <!-- ===================== FORM ===================== -->
+    <section class="panel form-panel" aria-label="Invoice details">
+      <h2 class="panel-title">Invoice Details</h2>
+
+      <div class="grid-2">
+        <label class="field">
+          <span>Invoice #</span>
+          <input type="text" id="invoiceNumber" value="2026-118" />
+        </label>
+        <label class="field">
+          <span>Date</span>
+          <input type="date" id="invoiceDate" />
+        </label>
+      </div>
+
+      <label class="field">
+        <span>Bill To (Client name)</span>
+        <input type="text" id="clientName" placeholder="e.g. Jane Smith" />
+      </label>
+
+      <label class="field">
+        <span>Client Address / Email <em>(optional)</em></span>
+        <textarea id="clientDetails" rows="2" placeholder="Street, City, State ZIP · email@example.com"></textarea>
+      </label>
+
+      <div class="items-header">
+        <h3>Services</h3>
+        <button type="button" class="btn btn-ghost" id="addItemBtn">+ Add service</button>
+      </div>
+
+      <div id="itemsList" class="items-list"><!-- rows injected here --></div>
+
+      <div class="totals-row">
+        <span>Total</span>
+        <strong id="totalDisplay">$0.00</strong>
+      </div>
+
+      <label class="field">
+        <span>Notes <em>(optional)</em></span>
+        <textarea id="notes" rows="2" placeholder="Any extra details for this invoice"></textarea>
+      </label>
+
+      <div class="actions">
+        <button type="button" class="btn btn-primary" id="downloadBtn">⬇ Save PDF to phone</button>
+        <button type="button" class="btn btn-secondary" id="shareBtn">📤 Share / Email PDF</button>
+        <button type="button" class="btn btn-ghost" id="emailBtn">✉ Email (mail app)</button>
+      </div>
+      <p class="hint" id="shareHint">Tip: "Share / Email PDF" attaches the PDF directly on most phones. On desktop, use "Save PDF" then attach it to an email.</p>
+    </section>
+
+    <!-- ===================== PREVIEW ===================== -->
+    <section class="panel preview-panel" aria-label="Invoice preview">
+      <h2 class="panel-title">Live Preview</h2>
+      <div class="invoice-scale">
+        <div id="invoicePaper" class="invoice-paper">
+          <div class="inv-top">
+            <div class="inv-brand">
+              <img src="assets/logo.svg" alt="" class="inv-logo" />
+              <div>
+                <div class="inv-biz">Toni's Cleaning Services</div>
+                <div class="inv-owner">Toni Goucher</div>
+              </div>
+            </div>
+            <div class="inv-meta">
+              <div class="inv-invoice-word">INVOICE</div>
+              <div class="inv-meta-line"><span>Invoice #</span><b id="pvNumber">2026-118</b></div>
+              <div class="inv-meta-line"><span>Date</span><b id="pvDate">—</b></div>
+            </div>
+          </div>
+
+          <div class="inv-parties">
+            <div class="inv-from">
+              <div class="inv-label">From</div>
+              <div>Toni Goucher</div>
+              <div>1101 E 267th St</div>
+              <div>Cleveland, MO 64734</div>
+              <div>(816) 406-8630</div>
+            </div>
+            <div class="inv-to">
+              <div class="inv-label">Bill To</div>
+              <div id="pvClient" class="pv-client">—</div>
+              <div id="pvClientDetails" class="pv-client-details"></div>
+            </div>
+          </div>
+
+          <table class="inv-table">
+            <thead>
+              <tr><th>Service</th><th class="right">Amount</th></tr>
+            </thead>
+            <tbody id="pvItems"></tbody>
+          </table>
+
+          <div class="inv-total">
+            <span>Total Due</span>
+            <b id="pvTotal">$0.00</b>
+          </div>
+
+          <div id="pvNotesWrap" class="inv-notes" hidden>
+            <div class="inv-label">Notes</div>
+            <div id="pvNotes"></div>
+          </div>
+
+          <div class="inv-thanks">Thank you for your business!</div>
+
+          <div class="inv-payto"><span>Please make all checks payable to Toni Goucher</span></div>
+
+          <div class="inv-footer">Toni's Cleaning Services · 1101 E 267th St, Cleveland, MO 64734 · (816) 406-8630</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== SCHEDULE VIEW ===================== -->
+  <main class="schedule-wrap" id="view-schedule" hidden>
+    <section class="panel schedule-panel">
+      <div class="week-nav">
+        <button type="button" class="btn btn-ghost" id="prevWeek">← Prev</button>
+        <div class="week-center">
+          <h2 class="panel-title" id="weekLabel">This Week</h2>
+          <button type="button" class="btn btn-ghost btn-sm" id="thisWeek">Today</button>
+        </div>
+        <button type="button" class="btn btn-ghost" id="nextWeek">Next →</button>
+      </div>
+
+      <div class="week-summary">
+        <div class="summary-card">
+          <span class="summary-label">Jobs this week</span>
+          <strong id="weekJobs">0</strong>
+        </div>
+        <div class="summary-card summary-earn">
+          <span class="summary-label">Projected earnings</span>
+          <strong id="weekTotal">$0.00</strong>
+        </div>
+      </div>
+
+      <div class="week-grid" id="weekGrid"><!-- day columns injected --></div>
+    </section>
+  </main>
+
+  <!-- Add / edit appointment dialog -->
+  <div class="modal-backdrop" id="apptModal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="apptModalTitle">
+      <h3 id="apptModalTitle">Add Client</h3>
+      <label class="field">
+        <span>Client name</span>
+        <input type="text" id="apptClient" placeholder="e.g. Jane Smith" />
+      </label>
+      <div class="grid-2">
+        <label class="field">
+          <span>Time</span>
+          <input type="time" id="apptTime" value="09:00" />
+        </label>
+        <label class="field">
+          <span>Price ($)</span>
+          <input type="number" id="apptPrice" min="0" step="0.01" placeholder="0.00" />
+        </label>
+      </div>
+      <label class="field">
+        <span>Service / notes <em>(optional)</em></span>
+        <input type="text" id="apptService" placeholder="e.g. Deep clean, 3 bed" />
+      </label>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="apptCancel">Cancel</button>
+        <button type="button" class="btn btn-primary" id="apptSave">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
