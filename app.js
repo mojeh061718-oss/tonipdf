@@ -117,7 +117,7 @@ function escapeHtml(s) {
 ------------------------------------------------------------ */
 function buildPdf() {
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ unit: "pt", format: "a4" });
+  const doc = new jsPDF({ unit: "pt", format: "letter" }); // US Letter (8.5x11") — full-size for US printers
   const d = invoiceData();
   const W = doc.internal.pageSize.getWidth();
   const M = 48; // margin
