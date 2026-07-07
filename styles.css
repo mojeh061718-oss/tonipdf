@@ -202,3 +202,33 @@ textarea { resize: vertical; }
   .layout { grid-template-columns: 1fr; }
   .brand-contact { text-align: left; }
 }
+
+/* ---------- iPhone / small-screen tuning ---------- */
+@media (max-width: 640px) {
+  /* Honor the notch / home-indicator safe areas */
+  .topbar { padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
+  .layout, .schedule-wrap { padding-left: max(14px, env(safe-area-inset-left)); padding-right: max(14px, env(safe-area-inset-right)); }
+
+  .brand-text h1 { font-size: 1.15rem; }
+  .brand-logo { width: 48px; height: 48px; }
+
+  /* Stack schedule days full-width so each is easy to tap — no sideways scroll */
+  .week-grid { grid-template-columns: 1fr; overflow-x: visible; }
+  .day-col { min-height: auto; }
+  .day-head { display: flex; justify-content: space-between; align-items: baseline; text-align: left; }
+  .day-total { text-align: right; margin: 0 0 6px; }
+
+  /* Full-width action buttons for thumb reach */
+  .actions .btn { flex: 1 1 100%; padding: 14px; }
+  .week-summary { flex-direction: row; }
+  .summary-card strong { font-size: 1.35rem; }
+}
+
+/* Bigger, finger-friendly tap targets + no iOS blue tap flash */
+@media (hover: none) {
+  .btn, .tab, .add-appt, .item-del, .appt-del { -webkit-tap-highlight-color: transparent; }
+  .appt-del { font-size: 1.3rem; opacity: .7; padding: 2px 6px; }
+}
+
+/* Inputs are >=16px so iOS Safari never auto-zooms on focus */
+input, textarea, select { font-size: 16px; }
