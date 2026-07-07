@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" role="img" aria-label="Toni's Cleaning Services logo">
+  <defs>
+    <linearGradient id="tgTeal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f766e"/>
+      <stop offset="1" stop-color="#115e59"/>
+    </linearGradient>
+    <linearGradient id="tgGold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fcd34d"/>
+      <stop offset="1" stop-color="#d4a017"/>
+    </linearGradient>
+    <linearGradient id="tgSky" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5eead4"/>
+      <stop offset="1" stop-color="#2dd4bf"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Outer ring -->
+  <circle cx="160" cy="160" r="150" fill="url(#tgTeal)"/>
+  <circle cx="160" cy="160" r="150" fill="none" stroke="url(#tgGold)" stroke-width="6"/>
+  <circle cx="160" cy="160" r="126" fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.25"/>
+
+  <!-- Water drop / bubble motif -->
+  <g transform="translate(160 128)">
+    <path d="M0 -58 C 34 -18, 46 6, 46 28 A 46 46 0 1 1 -46 28 C -46 6, -34 -18, 0 -58 Z"
+          fill="url(#tgSky)"/>
+    <path d="M0 -58 C 34 -18, 46 6, 46 28 A 46 46 0 1 1 -46 28 C -46 6, -34 -18, 0 -58 Z"
+          fill="none" stroke="#ffffff" stroke-opacity="0.5" stroke-width="3"/>
+    <!-- shine -->
+    <ellipse cx="-14" cy="18" rx="9" ry="15" fill="#ffffff" fill-opacity="0.55" transform="rotate(-20 -14 18)"/>
+  </g>
+
+  <!-- Sparkles -->
+  <g fill="url(#tgGold)">
+    <path d="M232 96 l7 16 16 7 -16 7 -7 16 -7 -16 -16 -7 16 -7 z"/>
+    <path d="M96 214 l5 11 11 5 -11 5 -5 11 -5 -11 -11 -5 11 -5 z"/>
+    <circle cx="236" cy="196" r="5"/>
+  </g>
+
+  <!-- Monogram -->
+  <text x="160" y="150" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif"
+        font-size="66" font-weight="700" fill="#0f3d3a" letter-spacing="-2">TG</text>
+
+  <!-- Banner text -->
+  <text x="160" y="238" text-anchor="middle" font-family="Georgia, serif"
+        font-size="21" font-weight="700" fill="#ffffff" letter-spacing="1">TONI'S CLEANING</text>
+  <text x="160" y="262" text-anchor="middle" font-family="Arial, Helvetica, sans-serif"
+        font-size="13" font-weight="600" fill="url(#tgGold)" letter-spacing="5">SERVICES</text>
+</svg>
